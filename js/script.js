@@ -45,13 +45,27 @@ document.addEventListener('DOMContentLoaded', () =>{
 
                 cardItemsContainer.appendChild(cartItem);
                 total += product.price;
-            })
+
+
+            });
         }
         cardToTalValue.textContent = `R$ ${total.toFixed(2)}`;
+        checkoutBtn.addEventListener('click', () => {
+                    const numerozap = '5515999999999';
+                    let mensagem = "Oie! OvO \n\n"
+                    cart.forEach(product =>{
+                        mensagem += `- ${product.name} (R$ ${product.price.toFixed(2)})`
+                });
+                    mensagem += `\nTotal: R$ ${total.toFixed(2)}*`;
+                    const urlwhatsapp = `https://wa.me/$(5515999999999)?text=$(enconcodeURIComponent(mensagem))`
+                window.open(urlwhatsapp, '_blank');
+                localStorage.removeItem('cart');
+            });
     }
+
         const limparTabela = document.getElementById('limpar-pedido');
         limparTabela.addEventListener('click', () =>{
             localStorage.removeItem('cart');
             location.reload(true)
-        })
-})
+        });
+});
