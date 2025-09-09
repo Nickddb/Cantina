@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
         cardToTalValue.textContent = `R$ ${total.toFixed(2)}`;
     }
-        const limparTable = document.getElementById('limpar-pedido');
+        const limparTabela = document.getElementById('limpar-pedido');
         limparTabela.addEventListener('click', () =>{
             localStorage.removeItem('cart');
             location.reload(true)
