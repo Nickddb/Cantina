@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantina SENAI | Carrinho </title>
     <link rel="stylesheet" href="CSS/base.css">
+    <link rel="stylesheet" href="CSS/carrinhos.css">
 </head>
 <body>
     <header class="main-header">
@@ -18,8 +19,23 @@
         </nav>
     </header>
 
+    <main>
+        <section class="card-section">
+            <h2>Meus pedidos</h2>
+            <div id="card-items-container">
+                <p>Seu carrinho está vazio</p>
+            </div>
+            <div class="card-total">
+                <h3>Total: <span id="card-total-value">R$ 0,00</span></h3>
+            </div>
+            <button id="checkout-btn">Finalizar pedido via Whatsapp</button>
+            <button id="limpar-pedido">Limpar pedido</button>
+        </section>
+    </main>
+
      <footer class="footlose">
-        <p>Desenvolvida pela Nick bela linda diva UwU</p>
+        <p> &copy; Desenvolvida pela Nick bela linda diva UwU</p>
     </footer>
+    <script src="js/script.js"> </script>
 </body>
 </html>
