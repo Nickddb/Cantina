@@ -1,0 +1,25 @@
+from django.shortcuts import render
+
+from rest_framework import generics
+from .models import Categoria, Produto
+from .serializers import CategoriaSerializer, ProdutoSerializer
+
+#Generics é o rest framework
+
+#Destroy = GET / DELETE
+class CategoriaDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+
+#List = GET / POST
+class CategoriaList(generics.ListCreateAPIView):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+
+class ProdutoList(generics.ListCreateAPIView):
+    queryset = Produto.objects.all()
+    serializer_class = ProdutoSerializer
+
+class ProdutoList(generics.ListCreateAPIView):
+    queryset = Produto.objects.all()
+    serializer_class = ProdutoSerializer
