@@ -1,7 +1,7 @@
 from django.urls import path 
 from . import views
 
-
+#O nome "produto" é o que irá abrir a API no navegador!
 urlpatterns = [
     path('categorias/', views.CategoriaList.as_view(), name = 'categoria-list'),
     path('categorias/<int:pk>/', views.CategoriaDetail.as_view(), name = 'categoria-detail'),
