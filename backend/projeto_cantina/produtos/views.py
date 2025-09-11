@@ -20,6 +20,6 @@ class ProdutoList(generics.ListCreateAPIView):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
 
-class ProdutoList(generics.ListCreateAPIView):
+class ProdutoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
