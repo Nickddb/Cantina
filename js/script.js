@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 });
 
 function fetchProdutos(){
-    fetch("http://localhost:8000/api/produtos/")
+    fetch("http://localhost:8000/api/produto/")
     .then(res => res.json())
     .then(data => renderProdutos(data))
     .catch(err => console.error("Erro ao buscar produto ", err));
@@ -80,9 +80,10 @@ function fetchProdutos(){
 
 function renderProdutos(produtos){
     produtos.forEach(produto => {
+        const categoria = produto.categoria.nome.toLowerCase();
         const container = document.getElementById(categoria);
 
-        if(container):
+        if(container){
             const card = document.createElement("div");
             card.className = "card";
             card.setAttribute("data-name", produto.nome);
@@ -93,13 +94,6 @@ function renderProdutos(produtos){
                         <p class="data-price">R$ ${produto.preco}</p>
                         <button class="adicionar-littlecar">COMPRAR</button>`;
             container.appendChild(card);
+        }
     })
 }
-
-/*  <div class="card" data-nome="Coxinha" data-price="8.00">
-                        <img src="needle.jpg" alt="foto exemplar">
-                        <h4>Coxinha de frango</h4>
-                        <p class="data-price">R$ 8.00</p>
-                        <button class="adicionar-littlecar">COMPRAR</button>
-                    </div> 
-*/

@@ -37,3 +37,7 @@
     color: gold;
     margin-bottom: 1rem;
 }
+
+.titulo{
+    justify-self: center;
+}

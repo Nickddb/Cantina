@@ -53,3 +53,10 @@ nav ul li a:hover{
 nav ul li a:active{
     border-bottom: 2px solid orchid;
 }
+.footlose{
+    background-color:chartreuse;
+    color:magenta;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 20dvh;
+}
