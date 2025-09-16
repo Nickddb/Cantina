@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () =>{
+    fetchProdutos();
     //Seleciona todos os botões da classe "add-To-Cart-btn"
     const addToCartButtons = document.querySelectorAll('.adicionar-littlecar');
 
@@ -69,3 +70,36 @@ document.addEventListener('DOMContentLoaded', () =>{
             location.reload(true)
         });
 });
+
+function fetchProdutos(){
+    fetch("http://localhost:8000/api/produtos/")
+    .then(res => res.json())
+    .then(data => renderProdutos(data))
+    .catch(err => console.error("Erro ao buscar produto ", err));
+}
+
+function renderProdutos(produtos){
+    produtos.forEach(produto => {
+        const container = document.getElementById(categoria);
+
+        if(container):
+            const card = document.createElement("div");
+            card.className = "card";
+            card.setAttribute("data-name", produto.nome);
+            card.setAttribute("data-price", produto.preco);
+            card.innerHTML = `
+                        <img src="${produto.imagem}" alt="${produto.descricao}">
+                        <h4>${produto.nome}</h4>
+                        <p class="data-price">R$ ${produto.preco}</p>
+                        <button class="adicionar-littlecar">COMPRAR</button>`;
+            container.appendChild(card);
+    })
+}
+
+/*  <div class="card" data-nome="Coxinha" data-price="8.00">
+                        <img src="needle.jpg" alt="foto exemplar">
+                        <h4>Coxinha de frango</h4>
+                        <p class="data-price">R$ 8.00</p>
+                        <button class="adicionar-littlecar">COMPRAR</button>
+                    </div> 
+*/
