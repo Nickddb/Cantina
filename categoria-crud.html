@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Categorias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+        }
+
+        form {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .actions .edit-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .actions .edit-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .actions .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .actions .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CRUD de Categorias</h1>
+
+    <!-- Formulário de cadastro de categoria -->
+    <div id="categoria-form">
+        <form id="categoria-form">
+            <label for="nome_categoria">Nome da Categoria:</label>
+            <input type="text" id="nome_categoria" name="nome_categoria" required>
+
+            <div class="form-actions">
+                <input type="submit" value="Cadastrar Categoria" id="submit-categoria-btn">
+                <button type="button" id="cancel-btn" style="display: none;">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabela de Categorias -->
+    <h2>Lista de Categorias</h2>
+    <table id="categorias-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Categorias serão inseridas aqui dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        const apiUrl = 'http://localhost:8000/api/';
+        let editingCategoryId = null;
+
+        // Função para carregar as categorias
+        async function getCategorias() {
+            try {
+                const response = await fetch(apiUrl + 'categorias/');
+                const categorias = await response.json();
+
+                const tbody = document.getElementById('categorias-table').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = ''; // Limpar antes de adicionar as novas categorias
+
+                categorias.forEach(categoria => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${categoria.nome}</td>
+                        <td class="actions">
+                            <button class="edit-btn" onclick="editarCategoria(${categoria.id}, '${categoria.nome}')">Editar</button>
+                            <button class="delete-btn" onclick="deletarCategoria(${categoria.id})">Excluir</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar categorias:', error);
+            }
+        }
+
+        // Função para criar nova categoria
+        async function criarCategoria(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome_categoria').value;
+
+            const fd = new FormData();
+            fd.append('nome', nome);
+
+            try {
+                const response = await fetch(apiUrl + 'categorias/', {
+                    method: 'POST',
+                    body: fd
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao cadastrar categoria');
+                }
+
+                const categoriaCriada = await response.json();
+                console.log('Categoria criada com sucesso:', categoriaCriada);
+
+                // Atualizar a tabela com a nova categoria
+                getCategorias();
+
+                // Limpar o campo
+                document.getElementById('nome_categoria').value = '';
+            } catch (error) {
+                console.error('Erro ao criar categoria:', error);
+                alert('Ocorreu um erro ao criar a categoria. Detalhes: ' + error.message);
+            }
+        }
+
+        // Função para editar categoria
+        function editarCategoria(id, nome) {
+            document.getElementById('nome_categoria').value = nome;
+            document.getElementById('submit-categoria-btn').value = 'Atualizar Categoria';
+            document.getElementById('cancel-btn').style.display = 'inline-block';
+            editingCategoryId = id;
+        }
+
+        // Função para cancelar edição
+        document.getElementById('cancel-btn').addEventListener('click', () => {
+            document.getElementById('nome_categoria').value = '';
+            document.getElementById('submit-categoria-btn').value = 'Cadastrar Categoria';
+            document.getElementById('cancel-btn').style.display = 'none';
+            editingCategoryId = null;
+        });
+
+        // Função para atualizar categoria
+        async function atualizarCategoria(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome_categoria').value;
+
+            const fd = new FormData();
+            fd.append('nome', nome);
+
+            try {
+                const response = await fetch(`${apiUrl}categorias/${editingCategoryId}/`, {
+                    method: 'PUT',
+                    body: fd
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao atualizar categoria');
+                }
+
+                const categoriaAtualizada = await response.json();
+                console.log('Categoria atualizada com sucesso:', categoriaAtualizada);
+
+                // Atualizar a tabela com a categoria editada
+                getCategorias();
+
+                // Limpar os campos e voltar ao estado inicial
+                document.getElementById('nome_categoria').value = '';
+                document.getElementById('submit-categoria-btn').value = 'Cadastrar Categoria';
+                document.getElementById('cancel-btn').style.display = 'none';
+                editingCategoryId = null;
+            } catch (error) {
+                console.error('Erro ao atualizar categoria:', error);
+                alert('Ocorreu um erro ao atualizar a categoria. Detalhes: ' + error.message);
+            }
+        }
+
+        // Função para deletar categoria
+        async function deletarCategoria(id) {
+            if (confirm('Você tem certeza que deseja excluir esta categoria?')) {
+                try {
+                    const response = await fetch(`${apiUrl}categorias/${id}/`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao excluir categoria');
+                    }
+
+                    console.log('Categoria excluída com sucesso');
+                    getCategorias();
+                } catch (error) {
+                    console.error('Erro ao excluir categoria:', error);
+                    alert('Ocorreu um erro ao excluir a categoria. Detalhes: ' + error.message);
+                }
+            }
+        }
+
+        // Inicialização da página
+        document.addEventListener('DOMContentLoaded', () => {
+            getCategorias(); // Carregar categorias existentes
+
+            // Enviar formulário sem recarregar a página
+            document.getElementById('submit-categoria-btn').addEventListener('click', (event) => {
+                if (editingCategoryId) {
+                    atualizarCategoria(event);
+                } else {
+                    criarCategoria(event);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
