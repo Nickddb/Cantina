@@ -129,7 +129,7 @@
     </div>
 
     <h2>Lista de Produtos</h2>
-    <table id="produtos-table">
+    <table id="produto-table">
         <thead>
             <tr>
                 <th>Nome</th>
@@ -144,7 +144,7 @@
             <!-- Produtos serão inseridos aqui dinamicamente -->
         </tbody>
     </table>
-
+ 
     <script>
         const apiUrl = 'http://localhost:8000/api/';
 
@@ -169,15 +169,15 @@
         }
 
         // Buscar produtos e atualizar a tabela
-        async function getProdutos() {
+        async function getProduto() {
             try {
-                const response = await fetch(apiUrl + 'produtos/');
-                const produtos = await response.json();
+                const response = await fetch(apiUrl + 'produto/');
+                const produto = await response.json();
 
-                const tbody = document.getElementById('produtos-table').getElementsByTagName('tbody')[0];
+                const tbody = document.getElementById('produto-table').getElementsByTagName('tbody')[0];
                 tbody.innerHTML = ''; // Limpar antes de adicionar os novos produtos
 
-                produtos.forEach(produto => {
+                produto.forEach(produto => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${produto.nome}</td>
@@ -200,7 +200,7 @@
         // Função para editar produto
         async function editarProduto(id) {
             try {
-                const response = await fetch(apiUrl + 'produtos/' + id + '/');
+                const response = await fetch(apiUrl + 'produto/' + id + '/');
                 const produto = await response.json();
 
                 // Preencher o formulário com os dados do produto
@@ -237,7 +237,7 @@
             if (imagem) fd.append('imagem', imagem);
 
             try {
-                const response = await fetch(apiUrl + 'produtos/', {
+                const response = await fetch(apiUrl + 'produto/', {
                     method: 'POST',
                     body: fd
                 });
@@ -250,7 +250,7 @@
                 console.log('Produto criado com sucesso:', produtoCriado);
 
                 // Atualizar a tabela com o novo produto
-                const tbody = document.getElementById('produtos-table').getElementsByTagName('tbody')[0];
+                const tbody = document.getElementById('produto-table').getElementsByTagName('tbody')[0];
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${produtoCriado.nome}</td>
@@ -297,7 +297,7 @@
             if (imagem) fd.append('imagem', imagem);
 
             try {
-                const response = await fetch(apiUrl + 'produtos/' + id + '/', {
+                const response = await fetch(apiUrl + 'produto/' + id + '/', {
                     method: 'PUT',
                     body: fd
                 });
@@ -310,7 +310,7 @@
                 console.log('Produto atualizado com sucesso:', produtoAtualizado);
 
                 // Atualizar a tabela
-                getProdutos();
+                getProduto();
 
                 // Limpar o formulário e resetar o botão
                 document.getElementById('nome').value = '';
@@ -332,7 +332,7 @@
             if (!confirmDelete) return;
 
             try {
-                const response = await fetch(apiUrl + 'produtos/' + id + '/', {
+                const response = await fetch(apiUrl + 'produto/' + id + '/', {
                     method: 'DELETE',
                 });
 
@@ -341,7 +341,7 @@
                 }
 
                 alert('Produto excluído com sucesso!');
-                getProdutos(); // Atualiza a tabela após exclusão
+                getProduto(); // Atualiza a tabela após exclusão
             } catch (error) {
                 console.error('Erro ao excluir produto:', error);
                 alert('Erro ao excluir produto!');
@@ -350,7 +350,7 @@
 
         // Inicializar a página
         getCategorias(); // Carregar categorias
-        getProdutos();   // Carregar produtos
+        getProduto();   // Carregar produtos
     </script>
 
 </body>
